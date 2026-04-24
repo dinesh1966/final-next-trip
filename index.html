@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NextTrip Holidays - Tour Booking</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.ripples/0.5.3/jquery.ripples.min.js"></script>
+  <script src="script.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    let db;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+    } catch (e) { console.warn("Firebase not initialized."); }
+  </script>
+</head>
+
+<body class="body-loaded">
+  <!-- Premium Page Loader -->
+  <div id="premiumLoader">
+    <div class="loader-plane"><i class="fas fa-plane"></i></div>
+    <div class="loader-text">NextTrip Holidays</div>
+  </div>
+  <script>
+    // Premium Page Loader Management
+    const loader = document.getElementById('premiumLoader');
+
+    function showLoader() {
+      if (!loader) return;
+      loader.classList.remove('fade-out');
+      loader.style.display = 'flex';
+      loader.style.opacity = '1';
+      loader.style.visibility = 'visible';
+    }
+
+    function hideLoader() {
+      if (!loader) return;
+      loader.classList.add('fade-out');
+      // After animation, hide completely
+      setTimeout(() => {
+        if (loader.classList.contains('fade-out')) {
+          loader.style.display = 'none';
+        }
+      }, 800);
+    }
+
+    // Initial Page Load
+    window.addEventListener('load', () => {
+      setTimeout(hideLoader, 500);
+    });
+
+    // Fallback if load event takes too long
+    setTimeout(hideLoader, 3000);
+
+    // Handle standard Link Clicks
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (!link) return;
+
+      const href = link.getAttribute('href');
+
+      // Ignore: empty links, hash-only links, external target, or special protocols
+      if (!href || href === '#' || href.startsWith('#') || link.target === '_blank' ||
+        href.startsWith('tel:') || href.startsWith('mailto:') || href.startsWith('javascript:')) {
+        return;
+      }
+
+      // Check if it's a different page
+      try {
+        const url = new URL(link.href);
+        if (url.origin === window.location.origin && url.pathname !== window.location.pathname) {
+          e.preventDefault();
+          showLoader();
+          setTimeout(() => {
+            window.location.href = link.href;
+          }, 500);
+        }
+      } catch (err) {
+        // Fallback for relative paths if URL parsing fails
+        if (href.includes('.html') && !href.includes('#')) {
+          e.preventDefault();
+          showLoader();
+          setTimeout(() => {
+            window.location.href = href;
+          }, 500);
+        }
+      }
+    });
+
+    // Handle Elements with onclick="window.location..."
+    document.addEventListener('DOMContentLoaded', () => {
+      const setupOnclicks = () => {
+        document.querySelectorAll('[onclick*="window.location"]').forEach(el => {
+          if (el.hasAttribute('data-loader-setup')) return;
+
+          const code = el.getAttribute('onclick');
+          el.removeAttribute('onclick');
+
+          el.addEventListener('click', (e) => {
+            const match = code.match(/window\.location\.href=['"]([^'"]+)['"]/);
+            if (match) {
+              const url = match[1];
+              if (!url.startsWith('#')) {
+                e.preventDefault();
+                e.stopPropagation();
+                showLoader();
+                setTimeout(() => { window.location.href = url; }, 500);
+              } else {
+                window.location.href = url;
+              }
+            }
+          });
+          el.setAttribute('data-loader-setup', 'true');
+        });
+      };
+
+      setupOnclicks();
+      new MutationObserver(setupOnclicks).observe(document.body, { childList: true, subtree: true });
+    });
+  </script>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <img
+          src="https://res.cloudinary.com/drkgkgiat/image/upload/q_auto/f_auto/v1775567539/Next_TRip_Final_Logo_Square_Size_-_Copy-removebg-preview_bsfsev.png"
+          alt="NextTrip" height="50">
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#destinations">Destination</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-right">
+        <span class="phone-link"><i class="fa fa-phone"></i> +91 9976692604</span>
+        <button class="icon-btn"><i class="fa fa-search"></i></button>
+        <button class="icon-btn" onclick="openAdminLogin()" title="Admin Login"><i class="fa fa-user"></i></button>
+      </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home">Home</a>
+    <a href="#destinations">Destination</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#contact">Contact</a>
+    <p class="mobile-phone"><i class="fa fa-phone"></i> +91 99766 92604</p>
+  </div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="home">
+    <!-- Hero Image Slider -->
+    <div class="hero-slider" id="heroSlider">
+      <div class="hero-slide active"
+        style="background-image: url('https://res.cloudinary.com/drkgkgiat/image/upload/v1776759695/Gemini_Generated_Image_5vgpnd5vgpnd5vgp_g9yrfp.png')">
+      </div>
+      <div class="hero-slide"
+        style="background-image: url('https://res.cloudinary.com/drkgkgiat/image/upload/v1776759692/Gemini_Generated_Image_o6fmjmo6fmjmo6fm_neszo1.png')">
+      </div>
+      <div class="hero-slide"
+        style="background-image: url('https://res.cloudinary.com/drkgkgiat/image/upload/v1776667719/Gemini_Generated_Image_eaexceaexceaexce_g5mngg.png')">
+      </div>
+    </div>
+
+    <!-- Slider Navigation Arrows -->
+    <button class="slider-btn slider-prev" id="sliderPrev" aria-label="Previous Slide">
+      <i class="fa fa-chevron-left"></i>
+    </button>
+    <button class="slider-btn slider-next" id="sliderNext" aria-label="Next Slide">
+      <i class="fa fa-chevron-right"></i>
+    </button>
+
+
+
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1 class="hero-title">Discover the World's <span>Hidden Wonders</span></h1>
+      <p class="hero-sub">Born from a passion for storytelling and global exploration, Next Trip Holidays has grown from
+        a Coimbatore boutique agency into India’s most trusted travel partner. For 15 years, we’ve dedicated ourselves
+        to crafting journeys that don't just show you a place, but immerse you in its soul.</p>
+      <div class="hero-btns">
+        <button class="btn-primary" onclick="openBookingModal()">Book Now</button>
+        <a href="#destinations" class="btn-secondary-outline">Explore Now</a>
+      </div>
+    </div>
+    <div class="hero-scroll"><span></span></div>
+  </section>
+
+  <!-- ===== TOUR PACKAGES GRID ===== -->
+  <section class="section-pad packages-section" id="destinations">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Explore</span>
+        <h2>Our Tour <span>Packages</span></h2>
+      </div>
+      <div class="packages-grid" id="mainPackagesGrid">
+        <!-- Packages will be loaded dynamically from script.js -->
+        <!-- Packages rendered dynamically by script.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== PACKAGE DETAIL MODAL ===== -->
+  <div class="package-modal" id="packageModal">
+    <div class="modal-overlay" onclick="closePackageModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="closePackageModal()"><i class="fa fa-times"></i></button>
+
+      <div class="modal-body">
+        <div class="modal-images">
+          <div class="main-image">
+            <img id="mainImage" src="" alt="Package">
+          </div>
+          <div class="thumbnail-images">
+            <img class="thumbnail" src="" alt="Thumbnail 1" onclick="changeMainImage(this)">
+            <img class="thumbnail" src="" alt="Thumbnail 2" onclick="changeMainImage(this)">
+            <img class="thumbnail" src="" alt="Thumbnail 3" onclick="changeMainImage(this)">
+            <img class="thumbnail" src="" alt="Thumbnail 4" onclick="changeMainImage(this)">
+          </div>
+        </div>
+
+        <div class="modal-details">
+          <h2 id="modalTitle">Package Title</h2>
+          <p id="modalDescription">Package description goes here</p>
+
+          <div class="package-highlights">
+            <h4>Package Includes:</h4>
+            <ul id="packageHighlights">
+              <li>Accommodation</li>
+              <li>Guided Tours</li>
+              <li>Meals</li>
+              <li>Transportation</li>
+            </ul>
+          </div>
+
+          <div class="package-info-grid">
+            <div class="info-item">
+              <span class="label">Duration</span>
+              <span id="duration" class="value">5-7 Days</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Tours Available</span>
+              <span id="toursAvailable" class="value">50+</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Starting Price</span>
+              <span id="price" class="value">From ₹ 25,000</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Best Season</span>
+              <span id="season" class="value">Oct - Mar</span>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-primary" onclick="bookPackage()">Book Now</button>
+            <button class="btn-secondary" onclick="closePackageModal()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== WHY CHOOSE US ===== -->
+  <section class="section-pad why-section">
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-tag">About Us</span>
+        <h2>Why <span>Choose</span> Us</h2>
+        <p>Everything you need for the perfect journey</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fa fa-headset"></i></div>
+          <h4>Global Travel Support</h4>
+          <p>24/7 customer support in multiple languages</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fa fa-map-marked-alt"></i></div>
+          <h4>Expert Local Guides</h4>
+          <p>Connect with certified local guides for authentic experiences</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fa fa-passport"></i></div>
+          <h4>Visa Assistance</h4>
+          <p>Hassle-free visa processing and travel document support</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon"><i class="fa fa-ship"></i></div>
+          <h4>Luxury Cruises</h4>
+          <p>Sail the seas with cruise packages for every budget</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TRENDING TOURS ===== -->
+  <section class="section-pad trending-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Hot Picks</span>
+        <h2>Trending <span>Tours</span></h2>
+      </div>
+      <div class="tours-grid" id="trending-tours-container">
+        <!-- Loaded dynamically from script.js -->
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- ===== GALLERY ===== -->
+  <section class="gallery-section section-pad" id="gallery">
+    <div class="container">
+      <div class="section-header centered gallery-header">
+        <h4
+          style="color: var(--text-mid); font-family: 'DM Sans', sans-serif; font-size: 16px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: -15px;">
+          It is best time to travel</h4>
+        <h2
+          style="font-family: 'Playfair Display', serif; font-size: clamp(60px, 10vw, 120px); font-weight: 900; color: var(--primary); text-transform: capitalize; text-shadow: 2px 2px 10px rgba(242,140,0,0.2);">
+          Travel</h2>
+      </div>
+
+      <!-- Gallery Filters -->
+      <div class="gallery-filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="asia">Asia</button>
+        <button class="filter-btn" data-filter="europe">Europe</button>
+        <button class="filter-btn" data-filter="africa">Africa</button>
+        <button class="filter-btn" data-filter="adventure">Adventure</button>
+      </div>
+
+      <!-- Gallery Grid -->
+      <div class="gallery-grid">
+        <div class="gallery-item" data-category="asia" data-title="Thailand Beach Paradise"
+          data-place="Phuket, Thailand" onclick="openLightbox(this)">
+          <div class="gallery-img-wrap">
+            <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800" alt="Thailand Beach">
+            <div class="gallery-overlay">
+              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Phuket, Thailand</div>
+              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <h4>Thailand Beach Paradise</h4>
+            <span class="category-tag">Asia</span>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="europe" data-title="Alpine Adventure"
+          data-place="Swiss Alps, Switzerland" onclick="openLightbox(this)">
+          <div class="gallery-img-wrap">
+            <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=800" alt="Swiss Mountains">
+            <div class="gallery-overlay">
+              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Swiss Alps, Switzerland</div>
+              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <h4>Alpine Adventure</h4>
+            <span class="category-tag">Europe</span>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="africa" data-title="African Safari" data-place="Serengeti, Tanzania"
+          onclick="openLightbox(this)">
+          <div class="gallery-img-wrap">
+            <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800" alt="Safari">
+            <div class="gallery-overlay">
+              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Serengeti, Tanzania</div>
+              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <h4>African Safari</h4>
+            <span class="category-tag">Africa</span>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="adventure" data-title="Mountain Trekking" data-place="Himalayas, Nepal"
+          onclick="openLightbox(this)">
+          <div class="gallery-img-wrap">
+            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800" alt="Hiking">
+            <div class="gallery-overlay">
+              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Himalayas, Nepal</div>
+              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <h4>Mountain Trekking</h4>
+            <span class="category-tag">Adventure</span>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="asia" data-title="Bali Temples" data-place="Ubud, Bali, Indonesia"
+          onclick="openLightbox(this)">
+          <div class="gallery-img-wrap">
+            <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800" alt="Bali">
+            <div class="gallery-overlay">
+              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Ubud, Bali, Indonesia</div>
+              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <h4>Bali Temples</h4>
+            <span class="category-tag">Asia</span>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="europe" data-title="Paris Romance" data-place="Paris, France"
+          onclick="openLightbox(this)">
+          <div class="gallery-img-wrap">
+            <img
+              src="https://res.cloudinary.com/drkgkgiat/image/upload/v1776672647/Gemini_Generated_Image_2hfzc52hfzc52hfz_l8ciwi.png"
+              alt="Paris">
+            <div class="gallery-overlay">
+              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Paris, France</div>
+              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <h4>Paris Romance</h4>
+            <span class="category-tag">Europe</span>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="adventure" data-title="Underwater Wonders"
+          data-place="Great Barrier Reef, Australia" onclick="openLightbox(this)">
+          <div class="gallery-img-wrap">
+            <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800" alt="Diving">
+            <div class="gallery-overlay">
+              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Great Barrier Reef, Australia</div>
+              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <h4>Underwater Wonders</h4>
+            <span class="category-tag">Adventure</span>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="africa" data-title="Egyptian Wonders" data-place="Giza, Egypt"
+          onclick="openLightbox(this)">
+          <div class="gallery-img-wrap">
+            <img
+              src="https://res.cloudinary.com/drkgkgiat/image/upload/v1776672769/Gemini_Generated_Image_52gfas52gfas52gf_amnf0q.png"
+              alt="Egypt">
+            <div class="gallery-overlay">
+              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Giza, Egypt</div>
+              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <h4>Egyptian Wonders</h4>
+            <span class="category-tag">Africa</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== QUICK BOOKING MODAL ===== -->
+  <div class="booking-modal-overlay" id="bookingModal">
+    <div class="booking-modal-box">
+      <button class="close-modal-btn" onclick="closeBookingModal()"><i class="fa fa-times"></i></button>
+      <div class="modal-header-premium">
+        <h3>Quick <span>Booking</span></h3>
+        <p>Fill in the details below and we'll get back to you shortly.</p>
+      </div>
+      <form class="modal-booking-form" id="quickBookingForm">
+        <div class="modal-form-grid">
+          <div class="modal-group">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Your Name" required>
+          </div>
+          <div class="modal-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Your Email" required>
+          </div>
+          <div class="modal-group">
+            <label>Phone</label>
+            <input type="tel" name="phone" placeholder="Your Phone" required>
+          </div>
+          <div class="modal-group">
+            <label>Destination</label>
+            <input type="text" name="destination" placeholder="Where to go?" required>
+          </div>
+          <div class="modal-group full">
+            <label>Special Instructions</label>
+            <textarea name="message" rows="3" placeholder="Tell us more..."></textarea>
+          </div>
+        </div>
+        <button type="submit" class="modal-submit-btn">Reserve Now <i class="fa fa-paper-plane"></i></button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== GALLERY LIGHTBOX ===== -->
+  <div class="lightbox-overlay" id="galleryLightbox" onclick="closeLightboxOnBg(event)">
+    <div class="lightbox-box">
+      <button class="lightbox-close" onclick="closeLightbox()"><i class="fa fa-times"></i></button>
+      <button class="lightbox-prev" onclick="lightboxNav(-1)"><i class="fa fa-chevron-left"></i></button>
+      <button class="lightbox-next" onclick="lightboxNav(1)"><i class="fa fa-chevron-right"></i></button>
+      <div class="lightbox-img-wrap">
+        <img id="lightboxImg" src="" alt="">
+      </div>
+      <div class="lightbox-caption">
+        <h3 id="lightboxTitle"></h3>
+        <p id="lightboxPlace"><i class="fa fa-location-dot"></i> <span></span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NEWSLETTER ===== -->
+  <section class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-box">
+        <div class="newsletter-text">
+          <h2>Stay Updated</h2>
+          <p>Sign up for new offers & updates from NextTrip</p>
+        </div>
+        <div class="newsletter-form">
+          <div class="nl-input-wrap">
+            <i class="fa fa-envelope"></i>
+            <input type="email" placeholder="Enter your email address">
+            <button>Subscribe</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="section-pad testimonials-section" id="testimonials">
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-tag">Reviews</span>
+        <h2>What Our <span>Clients</span> Say</h2>
+        <p>Heartfelt stories from our satisfied travelers</p>
+      </div>
+      <div class="testimonials-marquee-container">
+        <div class="testimonials-marquee-track">
+          <!-- 1st set -->
+          <div class="testi-card">
+            <div class="stars">★★★★★</div>
+            <p>"Booking our dream cruise was incredibly easy. The interface was user-friendly and everything was a dream
+              come true!"</p>
+            <div class="testi-author">
+              <div class="testi-avatar">AM</div>
+              <div>
+                <strong>Andrew Miller</strong>
+                <span>Illinois, United States</span>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card featured">
+            <div class="stars">★★★★★</div>
+            <p>"Finding the perfect bus was effortless. Smart filters and clear route comparisons made my journey
+              simple, organized, and completely hassle-free."</p>
+            <div class="testi-author">
+              <div class="testi-avatar">ST</div>
+              <div>
+                <strong>Sarah Thompson</strong>
+                <span>Texas, United States</span>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="stars">★★★★★</div>
+            <p>"The entire booking experience was seamless. I could easily browse schedules and check seat availability
+              with just a few clicks."</p>
+            <div class="testi-author">
+              <div class="testi-avatar">DR</div>
+              <div>
+                <strong>Daniel Roberts</strong>
+                <span>Washington, United States</span>
+              </div>
+            </div>
+          </div>
+          <!-- Duplicated 2nd set for endless scroll -->
+          <div class="testi-card">
+            <div class="stars">★★★★★</div>
+            <p>"Booking our dream cruise was incredibly easy. The interface was user-friendly and everything was a dream
+              come true!"</p>
+            <div class="testi-author">
+              <div class="testi-avatar">AM</div>
+              <div>
+                <strong>Andrew Miller</strong>
+                <span>Illinois, United States</span>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card featured">
+            <div class="stars">★★★★★</div>
+            <p>"Finding the perfect bus was effortless. Smart filters and clear route comparisons made my journey
+              simple, organized, and completely hassle-free."</p>
+            <div class="testi-author">
+              <div class="testi-avatar">ST</div>
+              <div>
+                <strong>Sarah Thompson</strong>
+                <span>Texas, United States</span>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="stars">★★★★★</div>
+            <p>"The entire booking experience was seamless. I could easily browse schedules and check seat availability
+              with just a few clicks."</p>
+            <div class="testi-author">
+              <div class="testi-avatar">DR</div>
+              <div>
+                <strong>Daniel Roberts</strong>
+                <span>Washington, United States</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CUSTOMER REVIEW FORM ===== -->
+  <section class="section-pad review-section"
+    style="position: relative; background: linear-gradient(180deg, var(--off-white) 0%, #fff 100%);">
+    <div class="review-marquee"
+      style="background: linear-gradient(90deg, var(--primary) 0%, var(--gold) 100%); color: white; padding: 12px 0; margin-bottom: 50px; box-shadow: 0 4px 15px rgba(242, 140, 0, 0.2);">
+      <marquee scrollamount="10" behavior="scroll" direction="left"
+        style="font-size: 16px; font-weight: 500; letter-spacing: 1px; display: flex; align-items: center;">
+        <span style="margin: 0 30px;"><i class="fa fa-star" style="color: #fffde7; margin-right: 8px;"></i> Share your
+          amazing experiences with NextTrip Holidays!</span>
+        <span style="margin: 0 30px;"><i class="fa fa-star" style="color: #fffde7; margin-right: 8px;"></i> Get a chance
+          to be featured on our social media!</span>
+        <span style="margin: 0 30px;"><i class="fa fa-star" style="color: #fffde7; margin-right: 8px;"></i> We love
+          hearing from our passionate travelers!</span>
+        <span style="margin: 0 30px;"><i class="fa fa-star" style="color: #fffde7; margin-right: 8px;"></i> Your
+          feedback helps us create better journeys for everyone!</span>
+      </marquee>
+    </div>
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-tag">Share Your Story</span>
+        <h2 style="font-size: clamp(32px, 5vw, 48px);">Write a <span>Review</span></h2>
+        <p style="max-width: 600px; margin: 15px auto 0; color: var(--text-mid); font-size: 16px;">Join the community of
+          travelers who inspire others to explore. Drop your review below!</p>
+      </div>
+      <div class="review-form-wrap"
+        style="max-width: 800px; margin: 0 auto; background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid rgba(242,140,0,0.1);">
+        <div class="review-form-card">
+          <div class="review-row">
+            <input type="text" id="reviewName" placeholder="Your Name" class="review-input">
+            <div class="file-upload-wrap">
+              <label for="reviewPhoto" class="file-label">
+                <i class="fa fa-camera"></i>
+                <span>Add Photos</span>
+              </label>
+              <input type="file" id="reviewPhoto" accept="image/*" class="file-input"
+                onchange="previewReviewImage(this)">
+            </div>
+          </div>
+          <div id="photoPreviewArea" class="photo-preview-area"></div>
+          <textarea id="reviewText" placeholder="Share your travel experience..." class="review-textarea"
+            rows="4"></textarea>
+          <div class="star-rating-wrap">
+            <span>Rating: </span>
+            <div class="stars-input" id="starInput">
+              <span class="star" data-val="1">★</span>
+              <span class="star" data-val="2">★</span>
+              <span class="star" data-val="3">★</span>
+              <span class="star" data-val="4">★</span>
+              <span class="star" data-val="5">★</span>
+            </div>
+          </div>
+          <button class="submit-review-btn" onclick="submitReview()">Submit Review <i
+              class="fa fa-paper-plane"></i></button>
+        </div>
+        <div id="reviewList" class="review-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section-pad faq-section">
+    <div class="container">
+      <div class="faq-layout">
+        <div class="faq-image">
+          <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600" alt="FAQ">
+        </div>
+        <div class="faq-content">
+          <div class="section-header">
+            <span class="section-tag">FAQ</span>
+            <h2>Frequently Asked <span>Questions</span></h2>
+          </div>
+          <div class="accordion" id="faqAccordion">
+            <div class="acc-item">
+              <button class="acc-trigger active" onclick="toggleAcc(this)">
+                What types of tours do you offer? <i class="fa fa-plus"></i>
+              </button>
+              <div class="acc-body open">
+                <p>We offer a wide range of tours including cultural, adventure, luxury, and customized itineraries.
+                  Popular destinations include Europe, Africa, Asia, and the Middle East.</p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                Are the tours customizable? <i class="fa fa-plus"></i>
+              </button>
+              <div class="acc-body">
+                <p>Absolutely! We specialize in creating personalized itineraries tailored to your preferences, budget,
+                  and travel style.</p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                What safety measures do you follow? <i class="fa fa-plus"></i>
+              </button>
+              <div class="acc-body">
+                <p>Safety is our top priority. All our tours follow strict safety protocols, with experienced guides and
+                  24/7 emergency support.</p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                How far in advance should I book? <i class="fa fa-plus"></i>
+              </button>
+              <div class="acc-body">
+                <p>We recommend booking at least 2–4 weeks in advance for domestic tours and 4–8 weeks for international
+                  packages.</p>
+              </div>
+            </div>
+            <div class="acc-item">
+              <button class="acc-trigger" onclick="toggleAcc(this)">
+                What is your cancellation policy? <i class="fa fa-plus"></i>
+              </button>
+              <div class="acc-body">
+                <p>Cancellations made 15 days before the tour are eligible for a full refund. For later cancellations, a
+                  partial charge may apply depending on the booking type.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ===== CONTACT SECTION ===== -->
+  <section class="section-pad contact-section" id="contact">
+    <div class="container">
+      <div class="section-header centered">
+        <span class="section-tag">Contact Us</span>
+        <h2>Get in <span>Touch</span></h2>
+        <p>Planning a trip? Let us help you create the perfect itinerary.</p>
+      </div>
+
+      <div class="contact-grid">
+        <!-- Contact Info -->
+        <div class="contact-info-wrap">
+          <div class="contact-info-card">
+            <div class="info-icon"><i class="fa fa-phone"></i></div>
+            <div class="info-text">
+              <h5>Mobile Number</h5>
+              <p>+91 98765 43210</p>
+              <p>+91 12345 67890</p>
+            </div>
+          </div>
+
+          <div class="contact-info-card">
+            <div class="info-icon"><i class="fa fa-envelope"></i></div>
+            <div class="info-text">
+              <h5>Email Address</h5>
+              <p>info@nextripholidays.com</p>
+              <p>bookings@nextripholidays.com</p>
+            </div>
+          </div>
+
+          <div class="contact-info-card">
+            <div class="info-icon"><i class="fa fa-location-dot"></i></div>
+            <div class="info-text">
+              <h5>Office Location</h5>
+              <p>No. 45, Travel Tower, Main Road,</p>
+              <p>Madurai - 625001, Tamil Nadu, India</p>
+            </div>
+          </div>
+
+          <!-- Accepted Payment Methods -->
+          <div class="payment-methods-card">
+            <h5>Accepted Payment Methods</h5>
+            <p class="payment-subtitle">Secure and convenient payment options</p>
+            <div class="payment-grid">
+              <div class="payment-logo"><img src="https://img.icons8.com/color/48/000000/google-pay.png"
+                  alt="Google Pay"></div>
+              <div class="payment-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg"
+                  alt="PhonePe"></div>
+              <div class="payment-logo"><img
+                  src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg" alt="Paytm">
+              </div>
+              <div class="payment-logo"><img
+                  src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo-vector.svg" alt="UPI"></div>
+              <div class="payment-logo"><img
+                  src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard"></div>
+              <div class="payment-logo"><img src="https://img.icons8.com/color/48/000000/visa.png" alt="VISA"></div>
+              <div class="payment-logo"><img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Rupay-Logo.png"
+                  alt="RuPay"></div>
+            </div>
+            <p class="payment-footer">100% secure payment processing</p>
+          </div>
+        </div>
+
+        <!-- Booking Form -->
+        <div class="contact-form-wrap">
+          <form class="booking-form-premium" id="contactForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" name="name" placeholder="Enter your name" required>
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" name="email" placeholder="Enter your email" required>
+              </div>
+              <div class="form-group">
+                <label>Mobile Number</label>
+                <input type="tel" name="phone" placeholder="Enter phone number" required>
+              </div>
+              <div class="form-group">
+                <label>Destination</label>
+                <select name="destination" required>
+                  <option value="" disabled selected>Select Destination</option>
+                  <option>International</option>
+                  <option>Domestic</option>
+                  <option>South India</option>
+                  <option>North India</option>
+                </select>
+              </div>
+              <div class="form-group full-width">
+                <label>Special Requirements</label>
+                <textarea name="message" rows="4" placeholder="Tell us about your dream trip..."></textarea>
+              </div>
+            </div>
+            <button type="submit" class="submit-booking-btn">Send Enquiry <i class="fa fa-paper-plane"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    // Contact Form Logic
+    document.getElementById('contactForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = 'Sending... <i class="fa fa-spinner fa-spin"></i>';
+
+      const formData = {
+        id: 'inq_' + Date.now(),
+        name: e.target.name.value,
+        email: e.target.email.value,
+        phone: e.target.phone.value,
+        destination: e.target.destination.value,
+        message: e.target.message.value,
+        timestamp: new Date().toISOString()
+      };
+
+      // 1. Local Storage (Save first)
+      try {
+        let localInquiries = JSON.parse(localStorage.getItem('nexttrip_inquiries')) || [];
+        localInquiries.push(formData);
+        localStorage.setItem('nexttrip_inquiries', JSON.stringify(localInquiries));
+      } catch (err) { console.warn("Local storage error:", err); }
+
+      // 2. Cloud Save (with Timeout)
+      try {
+        if (typeof db !== 'undefined' && firebase.apps.length > 0) {
+          const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 5000));
+          const firebaseTask = db.collection('inquiries').add({
+            ...formData,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          });
+          await Promise.race([firebaseTask, timeout]);
+          console.log("Cloud save successful");
+        }
+      } catch (error) {
+        console.warn("Cloud save skipped or took too long:", error.message);
+      }
+
+      // 3. User Feedback (Always show success since it's saved locally)
+      btn.innerHTML = 'Process Completed! <i class="fa fa-check"></i>';
+      btn.style.background = '#22c55e';
+      e.target.reset();
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        btn.style.background = '';
+      }, 4000);
+    });
+  </script>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-top-wrap">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <img
+              src="https://res.cloudinary.com/drkgkgiat/image/upload/q_auto/f_auto/v1775567539/Next_TRip_Final_Logo_Square_Size_-_Copy-removebg-preview_bsfsev.png"
+              alt="NextTrip" height="60">
+            <p>Your trusted partner for seamless, memorable travel experiences around the globe.</p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+          <div class="footer-col">
+            <h5>Quick Links</h5>
+            <a href="#home">Home</a>
+            <a href="#destinations">Tour Packages</a>
+            <a href="#gallery">Travel Gallery</a>
+            <a href="#testimonials">Testimonials</a>
+            <a href="#contact">Contact Us</a>
+          </div>
+          <div class="footer-col">
+            <h5>Destinations</h5>
+            <a href="javascript:void(0)" onclick="showSubPackagesGrid('south_india')">South India</a>
+            <a href="javascript:void(0)" onclick="showSubPackagesGrid('international')">International</a>
+            <a href="javascript:void(0)" onclick="showSubPackagesGrid('boathouse')">Boat House</a>
+            <a href="javascript:void(0)" onclick="showSubPackagesGrid('exotic')">Exotic Tours</a>
+          </div>
+          <div class="footer-col">
+            <h5>Contact Us</h5>
+            <p><i class="fa fa-phone"></i> +91 99766 92604</p>
+            <p><i class="fa fa-envelope"></i> info@nextripholidays.com</p>
+            <p><i class="fa fa-location-dot"></i> Madurai, Tamil Nadu</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 <strong>NextTrip Holidays</strong>. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- ===== SUB-PACKAGE FULL PAGE OVERLAY ===== -->
+  <div class="sub-pkg-page-overlay" id="subPkgModal">
+    <div class="sub-pkg-hero" id="subPkgHero">
+      <button class="back-to-home" onclick="closeSubPackagesGrid()">
+        <i class="fa fa-arrow-left"></i> Back to Tours
+      </button>
+      <div class="hero-content">
+        <h1 id="subPkgMainTitle">Tour <span>Packages</span></h1>
+        <p id="subPkgSubtitle">Discover the best of this region</p>
+      </div>
+    </div>
+    <div class="container">
+      <!-- GT Style Split Info -->
+      <div class="sub-detail-split" id="subDetailSplit" style="display:none;">
+        <div class="sub-detail-info">
+          <h2 id="subDetailTitle">Region Name</h2>
+          <p id="subDetailDesc">Region description goes here...</p>
+        </div>
+        <div class="sub-detail-mini-img">
+          <img id="subDetailMiniImg" src="" alt="Mini Header">
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top: 40px;">
+        <h2 id="gridSectionTitle">Places to <span>Explore</span></h2>
+      </div>
+
+      <div class="sub-grid" id="subPackagesGrid">
+        <!-- Sub-packages or Tours will be loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ADMIN LOGIN MODAL ===== -->
+  <div class="booking-modal-overlay" id="adminLoginModal" style="z-index: 30000; display:none; opacity:0; visibility:hidden; transition:0.3s;">
+    <div class="booking-modal-box" style="max-width:420px; position:relative;">
+      <button class="close-modal-btn" onclick="closeAdminLogin()"><i class="fa fa-times"></i></button>
+      <div class="modal-header-premium" style="text-align:center; margin-bottom:25px;">
+        <div style="width:60px;height:60px;background:linear-gradient(135deg,#f28c00,#e07d00);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">
+          <i class="fa fa-user-shield" style="color:white;font-size:24px;"></i>
+        </div>
+        <h3>Admin <span>Login</span></h3>
+        <p>Enter your credentials to access the admin panel.</p>
+      </div>
+      <div class="modal-form-grid" style="display:block;">
+        <div class="modal-group" style="margin-bottom:18px;">
+          <label style="display:block;font-weight:600;margin-bottom:6px;font-size:14px;">Username</label>
+          <input type="text" id="adminUsername" class="admin-input" placeholder="Enter username" style="width:100%;padding:12px 15px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;outline:none;transition:0.3s;" onkeydown="if(event.key==='Enter')doAdminLogin()">
+        </div>
+        <div class="modal-group" style="margin-bottom:25px;">
+          <label style="display:block;font-weight:600;margin-bottom:6px;font-size:14px;">Password</label>
+          <div style="position:relative;">
+            <input type="password" id="adminPassword" class="admin-input" placeholder="Enter password" style="width:100%;padding:12px 15px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;outline:none;transition:0.3s;" onkeydown="if(event.key==='Enter')doAdminLogin()">
+            <button onclick="togglePwdVisibility()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#888;" id="pwdToggleBtn"><i class="fa fa-eye" id="pwdToggleIcon"></i></button>
+          </div>
+        </div>
+        <div id="adminLoginError" style="display:none;background:#fff1f0;border:1px solid #ffa39e;color:#cf1322;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:18px;text-align:center;">
+          <i class="fa fa-circle-exclamation"></i> Invalid username or password. Try again.
+        </div>
+        <button onclick="doAdminLogin()" style="width:100%;padding:14px;background:linear-gradient(135deg,#f28c00,#e07d00);color:white;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;transition:0.3s;letter-spacing:0.5px;" id="adminLoginBtn">
+          <i class="fa fa-sign-in-alt"></i> Sign In to Admin
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function openAdminLogin() {
+      const m = document.getElementById('adminLoginModal');
+      m.style.display = 'flex';
+      setTimeout(() => { m.style.opacity = '1'; m.style.visibility = 'visible'; }, 10);
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => document.getElementById('adminUsername').focus(), 100);
+      document.getElementById('adminLoginError').style.display = 'none';
+      document.getElementById('adminUsername').value = '';
+      document.getElementById('adminPassword').value = '';
+    }
+    function closeAdminLogin() {
+      const m = document.getElementById('adminLoginModal');
+      m.style.opacity = '0';
+      m.style.visibility = 'hidden';
+      setTimeout(() => { m.style.display = 'none'; }, 300);
+      document.body.style.overflow = '';
+    }
+    function togglePwdVisibility() {
+      const pwd = document.getElementById('adminPassword');
+      const icon = document.getElementById('pwdToggleIcon');
+      if (pwd.type === 'password') { pwd.type = 'text'; icon.className = 'fa fa-eye-slash'; }
+      else { pwd.type = 'password'; icon.className = 'fa fa-eye'; }
+    }
+    function doAdminLogin() {
+      const u = document.getElementById('adminUsername').value.trim();
+      const p = document.getElementById('adminPassword').value.trim();
+      const errEl = document.getElementById('adminLoginError');
+      const btn = document.getElementById('adminLoginBtn');
+      if (u === 'admin' && p === '1234') {
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Redirecting...';
+        btn.style.opacity = '0.8';
+        errEl.style.display = 'none';
+        sessionStorage.setItem('nexttrip_admin_auth', 'true');
+        setTimeout(() => { window.location.href = 'admin.html'; }, 800);
+      } else {
+        errEl.style.display = 'block';
+        document.getElementById('adminUsername').style.border = '1.5px solid #ff4d4f';
+        document.getElementById('adminPassword').style.border = '1.5px solid #ff4d4f';
+        setTimeout(() => {
+          document.getElementById('adminUsername').style.border = '1.5px solid #ddd';
+          document.getElementById('adminPassword').style.border = '1.5px solid #ddd';
+        }, 2000);
+      }
+    }
+    // Close on overlay click
+    document.getElementById('adminLoginModal').addEventListener('click', function(e) {
+      if (e.target === this) closeAdminLogin();
+    });
+  </script>
+
+  <!-- ===== TOUR ITINERARY DETAIL OVERLAY ===== -->
+  <div class="tour-detail-overlay" id="tourDetailOverlay">
+    <div class="sub-pkg-hero" id="tourHero" style="height: 50vh;">
+      <button class="back-to-home" onclick="closeTourDetail()">
+        <i class="fa fa-arrow-left"></i> Back to Overview
+      </button>
+      <div class="hero-content">
+        <h1 id="tourMainTitle">Tour <span>Name</span></h1>
+        <p id="tourMainPrice">From ₹00.000</p>
+      </div>
+    </div>
+
+    <div class="container itinerary-section">
+      <div class="itin-card">
+        <div class="itin-desc-area">
+          <div class="section-header">
+            <h2>Tour <span>Program</span></h2>
+            <p id="tourFullDesc">About this tour...</p>
+          </div>
+
+          <div class="day-program" id="itineraryProgram">
+            <!-- Day by Day activities -->
+          </div>
+
+          <div class="itin-actions">
+            <button class="btn-primary" onclick="bookThisTour()">Book Now</button>
+            <button class="btn-secondary-outline" onclick="closeTourDetail()">Close</button>
+          </div>
+        </div>
+        <div class="itin-side-img">
+          <img id="tourSideImg" src="" alt="Tour Image">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
