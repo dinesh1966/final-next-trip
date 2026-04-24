@@ -155,8 +155,7 @@
       </ul>
 
       <div class="nav-right">
-        <span class="phone-link"><i class="fa fa-phone"></i> +91 9976692604</span>
-        <button class="icon-btn"><i class="fa fa-search"></i></button>
+        <span class="phone-link"><i class="fa fa-phone"></i> +91 9500123844</span>
         <button class="icon-btn" onclick="openAdminLogin()" title="Admin Login"><i class="fa fa-user"></i></button>
       </div>
 
@@ -173,7 +172,7 @@
     <a href="#gallery">Gallery</a>
     <a href="#testimonials">Testimonials</a>
     <a href="#contact">Contact</a>
-    <p class="mobile-phone"><i class="fa fa-phone"></i> +91 99766 92604</p>
+    <p class="mobile-phone"><i class="fa fa-phone"></i> +91 95001 23844</p>
   </div>
 
   <!-- ===== HERO ===== -->
@@ -358,130 +357,139 @@
         <button class="filter-btn" data-filter="adventure">Adventure</button>
       </div>
 
-      <!-- Gallery Grid -->
-      <div class="gallery-grid">
-        <div class="gallery-item" data-category="asia" data-title="Thailand Beach Paradise"
-          data-place="Phuket, Thailand" onclick="openLightbox(this)">
-          <div class="gallery-img-wrap">
-            <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800" alt="Thailand Beach">
-            <div class="gallery-overlay">
-              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Phuket, Thailand</div>
-              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+      <!-- Gallery Slider Container -->
+      <div class="gallery-slider-wrap">
+        <button class="gallery-nav-btn prev" id="galleryPrev"><i class="fa fa-chevron-left"></i></button>
+        <button class="gallery-nav-btn next" id="galleryNext"><i class="fa fa-chevron-right"></i></button>
+        
+        <div class="gallery-slider-container" id="gallerySlider">
+          <div class="gallery-item" data-category="asia" data-title="Thailand Beach Paradise"
+            data-place="Phuket, Thailand" onclick="openLightbox(this)">
+            <div class="gallery-img-wrap">
+              <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=800" alt="Thailand Beach">
+              <div class="gallery-overlay">
+                <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Phuket, Thailand</div>
+                <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <h4>Thailand Beach Paradise</h4>
+              <span class="category-tag">Asia</span>
             </div>
           </div>
-          <div class="gallery-info">
-            <h4>Thailand Beach Paradise</h4>
-            <span class="category-tag">Asia</span>
+
+          <div class="gallery-item" data-category="europe" data-title="Alpine Adventure"
+            data-place="Swiss Alps, Switzerland" onclick="openLightbox(this)">
+            <div class="gallery-img-wrap">
+              <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=800" alt="Swiss Mountains">
+              <div class="gallery-overlay">
+                <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Swiss Alps, Switzerland</div>
+                <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <h4>Alpine Adventure</h4>
+              <span class="category-tag">Europe</span>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-category="africa" data-title="African Safari" data-place="Serengeti, Tanzania"
+            onclick="openLightbox(this)">
+            <div class="gallery-img-wrap">
+              <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800" alt="Safari">
+              <div class="gallery-overlay">
+                <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Serengeti, Tanzania</div>
+                <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <h4>African Safari</h4>
+              <span class="category-tag">Africa</span>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-category="adventure" data-title="Mountain Trekking" data-place="Himalayas, Nepal"
+            onclick="openLightbox(this)">
+            <div class="gallery-img-wrap">
+              <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800" alt="Hiking">
+              <div class="gallery-overlay">
+                <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Himalayas, Nepal</div>
+                <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <h4>Mountain Trekking</h4>
+              <span class="category-tag">Adventure</span>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-category="asia" data-title="Bali Temples" data-place="Ubud, Bali, Indonesia"
+            onclick="openLightbox(this)">
+            <div class="gallery-img-wrap">
+              <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800" alt="Bali">
+              <div class="gallery-overlay">
+                <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Ubud, Bali, Indonesia</div>
+                <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <h4>Bali Temples</h4>
+              <span class="category-tag">Asia</span>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-category="europe" data-title="Paris Romance" data-place="Paris, France"
+            onclick="openLightbox(this)">
+            <div class="gallery-img-wrap">
+              <img
+                src="https://res.cloudinary.com/drkgkgiat/image/upload/v1776672647/Gemini_Generated_Image_2hfzc52hfzc52hfz_l8ciwi.png"
+                alt="Paris">
+              <div class="gallery-overlay">
+                <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Paris, France</div>
+                <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <h4>Paris Romance</h4>
+              <span class="category-tag">Europe</span>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-category="adventure" data-title="Underwater Wonders"
+            data-place="Great Barrier Reef, Australia" onclick="openLightbox(this)">
+            <div class="gallery-img-wrap">
+              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800" alt="Diving">
+              <div class="gallery-overlay">
+                <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Great Barrier Reef, Australia</div>
+                <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <h4>Underwater Wonders</h4>
+              <span class="category-tag">Adventure</span>
+            </div>
+          </div>
+
+          <div class="gallery-item" data-category="africa" data-title="Egyptian Wonders" data-place="Giza, Egypt"
+            onclick="openLightbox(this)">
+            <div class="gallery-img-wrap">
+              <img
+                src="https://res.cloudinary.com/drkgkgiat/image/upload/v1776672769/Gemini_Generated_Image_52gfas52gfas52gf_amnf0q.png"
+                alt="Egypt">
+              <div class="gallery-overlay">
+                <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Giza, Egypt</div>
+                <div class="zoom-btn"><i class="fa fa-expand"></i></div>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <h4>Egyptian Wonders</h4>
+              <span class="category-tag">Africa</span>
+            </div>
           </div>
         </div>
-
-        <div class="gallery-item" data-category="europe" data-title="Alpine Adventure"
-          data-place="Swiss Alps, Switzerland" onclick="openLightbox(this)">
-          <div class="gallery-img-wrap">
-            <img src="https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?w=800" alt="Swiss Mountains">
-            <div class="gallery-overlay">
-              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Swiss Alps, Switzerland</div>
-              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <h4>Alpine Adventure</h4>
-            <span class="category-tag">Europe</span>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="africa" data-title="African Safari" data-place="Serengeti, Tanzania"
-          onclick="openLightbox(this)">
-          <div class="gallery-img-wrap">
-            <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?w=800" alt="Safari">
-            <div class="gallery-overlay">
-              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Serengeti, Tanzania</div>
-              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <h4>African Safari</h4>
-            <span class="category-tag">Africa</span>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="adventure" data-title="Mountain Trekking" data-place="Himalayas, Nepal"
-          onclick="openLightbox(this)">
-          <div class="gallery-img-wrap">
-            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800" alt="Hiking">
-            <div class="gallery-overlay">
-              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Himalayas, Nepal</div>
-              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <h4>Mountain Trekking</h4>
-            <span class="category-tag">Adventure</span>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="asia" data-title="Bali Temples" data-place="Ubud, Bali, Indonesia"
-          onclick="openLightbox(this)">
-          <div class="gallery-img-wrap">
-            <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800" alt="Bali">
-            <div class="gallery-overlay">
-              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Ubud, Bali, Indonesia</div>
-              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <h4>Bali Temples</h4>
-            <span class="category-tag">Asia</span>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="europe" data-title="Paris Romance" data-place="Paris, France"
-          onclick="openLightbox(this)">
-          <div class="gallery-img-wrap">
-            <img
-              src="https://res.cloudinary.com/drkgkgiat/image/upload/v1776672647/Gemini_Generated_Image_2hfzc52hfzc52hfz_l8ciwi.png"
-              alt="Paris">
-            <div class="gallery-overlay">
-              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Paris, France</div>
-              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <h4>Paris Romance</h4>
-            <span class="category-tag">Europe</span>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="adventure" data-title="Underwater Wonders"
-          data-place="Great Barrier Reef, Australia" onclick="openLightbox(this)">
-          <div class="gallery-img-wrap">
-            <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800" alt="Diving">
-            <div class="gallery-overlay">
-              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Great Barrier Reef, Australia</div>
-              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <h4>Underwater Wonders</h4>
-            <span class="category-tag">Adventure</span>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="africa" data-title="Egyptian Wonders" data-place="Giza, Egypt"
-          onclick="openLightbox(this)">
-          <div class="gallery-img-wrap">
-            <img
-              src="https://res.cloudinary.com/drkgkgiat/image/upload/v1776672769/Gemini_Generated_Image_52gfas52gfas52gf_amnf0q.png"
-              alt="Egypt">
-            <div class="gallery-overlay">
-              <div class="gallery-place-label"><i class="fa fa-location-dot"></i> Giza, Egypt</div>
-              <div class="zoom-btn"><i class="fa fa-expand"></i></div>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <h4>Egyptian Wonders</h4>
-            <span class="category-tag">Africa</span>
-          </div>
+        
+        <div class="gallery-progress-bar">
+          <div class="progress-fill" id="galleryProgress"></div>
         </div>
       </div>
     </div>
@@ -788,8 +796,8 @@
             <div class="info-icon"><i class="fa fa-phone"></i></div>
             <div class="info-text">
               <h5>Mobile Number</h5>
-              <p>+91 98765 43210</p>
-              <p>+91 12345 67890</p>
+              <p>+91 95001 23844</p>
+              <p>+91 93452 10239</p>
             </div>
           </div>
 
@@ -797,8 +805,7 @@
             <div class="info-icon"><i class="fa fa-envelope"></i></div>
             <div class="info-text">
               <h5>Email Address</h5>
-              <p>info@nextripholidays.com</p>
-              <p>bookings@nextripholidays.com</p>
+              <p>nextripholidaysinfo@gmail.com</p>
             </div>
           </div>
 
@@ -960,8 +967,9 @@
           </div>
           <div class="footer-col">
             <h5>Contact Us</h5>
-            <p><i class="fa fa-phone"></i> +91 99766 92604</p>
-            <p><i class="fa fa-envelope"></i> info@nextripholidays.com</p>
+            <p><i class="fa fa-phone"></i> +91 95001 23844</p>
+            <p><i class="fa fa-phone"></i> +91 93452 10239</p>
+            <p><i class="fa fa-envelope"></i> nextripholidaysinfo@gmail.com</p>
             <p><i class="fa fa-location-dot"></i> Madurai, Tamil Nadu</p>
           </div>
         </div>
@@ -1011,11 +1019,13 @@
   </div>
 
   <!-- ===== ADMIN LOGIN MODAL ===== -->
-  <div class="booking-modal-overlay" id="adminLoginModal" style="z-index: 30000; display:none; opacity:0; visibility:hidden; transition:0.3s;">
+  <div class="booking-modal-overlay" id="adminLoginModal"
+    style="z-index: 30000; display:none; opacity:0; visibility:hidden; transition:0.3s;">
     <div class="booking-modal-box" style="max-width:420px; position:relative;">
       <button class="close-modal-btn" onclick="closeAdminLogin()"><i class="fa fa-times"></i></button>
       <div class="modal-header-premium" style="text-align:center; margin-bottom:25px;">
-        <div style="width:60px;height:60px;background:linear-gradient(135deg,#f28c00,#e07d00);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">
+        <div
+          style="width:60px;height:60px;background:linear-gradient(135deg,#f28c00,#e07d00);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">
           <i class="fa fa-user-shield" style="color:white;font-size:24px;"></i>
         </div>
         <h3>Admin <span>Login</span></h3>
@@ -1024,19 +1034,28 @@
       <div class="modal-form-grid" style="display:block;">
         <div class="modal-group" style="margin-bottom:18px;">
           <label style="display:block;font-weight:600;margin-bottom:6px;font-size:14px;">Username</label>
-          <input type="text" id="adminUsername" class="admin-input" placeholder="Enter username" style="width:100%;padding:12px 15px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;outline:none;transition:0.3s;" onkeydown="if(event.key==='Enter')doAdminLogin()">
+          <input type="text" id="adminUsername" class="admin-input" placeholder="Enter username"
+            style="width:100%;padding:12px 15px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;outline:none;transition:0.3s;"
+            onkeydown="if(event.key==='Enter')doAdminLogin()">
         </div>
         <div class="modal-group" style="margin-bottom:25px;">
           <label style="display:block;font-weight:600;margin-bottom:6px;font-size:14px;">Password</label>
           <div style="position:relative;">
-            <input type="password" id="adminPassword" class="admin-input" placeholder="Enter password" style="width:100%;padding:12px 15px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;outline:none;transition:0.3s;" onkeydown="if(event.key==='Enter')doAdminLogin()">
-            <button onclick="togglePwdVisibility()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#888;" id="pwdToggleBtn"><i class="fa fa-eye" id="pwdToggleIcon"></i></button>
+            <input type="password" id="adminPassword" class="admin-input" placeholder="Enter password"
+              style="width:100%;padding:12px 15px;border:1.5px solid #ddd;border-radius:8px;font-size:15px;outline:none;transition:0.3s;"
+              onkeydown="if(event.key==='Enter')doAdminLogin()">
+            <button onclick="togglePwdVisibility()"
+              style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#888;"
+              id="pwdToggleBtn"><i class="fa fa-eye" id="pwdToggleIcon"></i></button>
           </div>
         </div>
-        <div id="adminLoginError" style="display:none;background:#fff1f0;border:1px solid #ffa39e;color:#cf1322;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:18px;text-align:center;">
+        <div id="adminLoginError"
+          style="display:none;background:#fff1f0;border:1px solid #ffa39e;color:#cf1322;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:18px;text-align:center;">
           <i class="fa fa-circle-exclamation"></i> Invalid username or password. Try again.
         </div>
-        <button onclick="doAdminLogin()" style="width:100%;padding:14px;background:linear-gradient(135deg,#f28c00,#e07d00);color:white;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;transition:0.3s;letter-spacing:0.5px;" id="adminLoginBtn">
+        <button onclick="doAdminLogin()"
+          style="width:100%;padding:14px;background:linear-gradient(135deg,#f28c00,#e07d00);color:white;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;transition:0.3s;letter-spacing:0.5px;"
+          id="adminLoginBtn">
           <i class="fa fa-sign-in-alt"></i> Sign In to Admin
         </button>
       </div>
@@ -1088,7 +1107,7 @@
       }
     }
     // Close on overlay click
-    document.getElementById('adminLoginModal').addEventListener('click', function(e) {
+    document.getElementById('adminLoginModal').addEventListener('click', function (e) {
       if (e.target === this) closeAdminLogin();
     });
   </script>
