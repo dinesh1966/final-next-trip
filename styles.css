@@ -2627,13 +2627,23 @@ textarea {
 
 @media (max-width: 900px) {
 
-  .nav-links,
+  .nav-links {
+    display: none;
+  }
+
   .nav-right {
+    display: flex !important;
+    margin-left: auto;
+    gap: 12px;
+  }
+
+  .nav-right .phone-link {
     display: none;
   }
 
   .hamburger {
     display: flex;
+    margin-left: 0;
   }
 
 
