@@ -2636,20 +2636,7 @@ textarea {
     display: flex;
   }
 
-  .packages-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
-  .pkg-card {
-    grid-column: span 1;
-    aspect-ratio: 4/3;
-  }
-
-  .pkg-card.pkg-large,
-  .pkg-card.pkg-medium {
-    grid-column: span 2;
-    aspect-ratio: 16/9;
-  }
 
   .faq-layout {
     grid-template-columns: 1fr;
@@ -2695,15 +2682,7 @@ textarea {
     padding: 56px 0;
   }
 
-  .packages-grid {
-    grid-template-columns: 1fr 1fr;
-  }
 
-  .pkg-card.pkg-large,
-  .pkg-card.pkg-medium {
-    grid-column: span 2;
-    aspect-ratio: 4/3;
-  }
 
   .tours-grid {
     grid-template-columns: 1fr 1fr;
@@ -2755,15 +2734,7 @@ textarea {
     grid-template-columns: 1fr;
   }
 
-  .packages-grid {
-    grid-template-columns: 1fr;
-  }
 
-  .pkg-card,
-  .pkg-card.pkg-large,
-  .pkg-card.pkg-medium {
-    grid-column: span 1;
-  }
 
   .tour-types-grid {
     grid-template-columns: 1fr;
@@ -5289,23 +5260,7 @@ textarea {
 
 /* --- Packages Grid Mobile (extra small) --- */
 @media (max-width: 480px) {
-  .packages-grid {
-    grid-template-columns: 1fr !important;
-  }
 
-  .pkg-card,
-  .pkg-card.pkg-large,
-  .pkg-card.pkg-medium,
-  .pkg-card:nth-child(4),
-  .pkg-card:nth-child(5) {
-    grid-column: span 1 !important;
-    aspect-ratio: 4/3 !important;
-    height: auto !important;
-  }
-
-  .pkg-overlay h3 {
-    font-size: 18px;
-  }
 }
 
 /* --- Why Choose Us Mobile Fix --- */
@@ -5811,80 +5766,11 @@ textarea {
    ============================================ */
 
 /* ===== PACKAGES — Always 3 cols on tablet/mobile ===== */
-@media (max-width: 900px) {
-  .packages-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 12px !important;
-  }
 
-  .pkg-card,
-  .pkg-card.pkg-large,
-  .pkg-card.pkg-medium,
-  .pkg-card:nth-child(4),
-  .pkg-card:nth-child(5) {
-    grid-column: span 1 !important;
-    grid-row: span 1 !important;
-    aspect-ratio: 4/3 !important;
-    height: auto !important;
-  }
 
-  .pkg-overlay {
-    padding: 16px !important;
-    gap: 8px !important;
-  }
 
-  .pkg-overlay h3 {
-    font-size: clamp(13px, 2vw, 18px) !important;
-  }
 
-  .pkg-btn {
-    padding: 5px 12px !important;
-    font-size: 9px !important;
-    letter-spacing: 0.5px !important;
-  }
-}
 
-@media (max-width: 600px) {
-  .packages-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 8px !important;
-  }
-
-  .pkg-overlay {
-    padding: 10px !important;
-    gap: 5px !important;
-  }
-
-  .pkg-overlay h3 {
-    font-size: clamp(10px, 3.2vw, 14px) !important;
-  }
-
-  .pkg-btn {
-    padding: 4px 8px !important;
-    font-size: 8px !important;
-    letter-spacing: 0 !important;
-  }
-}
-
-@media (max-width: 400px) {
-  .packages-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 5px !important;
-  }
-
-  .pkg-overlay {
-    padding: 7px !important;
-  }
-
-  .pkg-overlay h3 {
-    font-size: 9px !important;
-    margin-bottom: 0 !important;
-  }
-
-  .pkg-btn {
-    display: none !important;
-  }
-}
 
 /* ===== GALLERY — Always 3 cols on tablet/mobile ===== */
 @media (max-width: 900px) {
@@ -6184,57 +6070,9 @@ textarea {
    ============================================ */
 
 /* ===== PACKAGES — 2 cols on mobile ===== */
-@media (max-width: 900px) {
-  .packages-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 14px !important;
-  }
 
-  .pkg-card,
-  .pkg-card.pkg-large,
-  .pkg-card.pkg-medium,
-  .pkg-card:nth-child(4),
-  .pkg-card:nth-child(5) {
-    grid-column: span 1 !important;
-    grid-row: span 1 !important;
-    aspect-ratio: 4/3 !important;
-    height: auto !important;
-  }
 
-  .pkg-overlay {
-    padding: 14px !important;
-    gap: 8px !important;
-  }
 
-  .pkg-overlay h3 {
-    font-size: clamp(14px, 3.5vw, 20px) !important;
-  }
-
-  .pkg-btn {
-    padding: 6px 14px !important;
-    font-size: 10px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .packages-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important;
-  }
-
-  .pkg-overlay {
-    padding: 10px !important;
-  }
-
-  .pkg-overlay h3 {
-    font-size: clamp(12px, 3.8vw, 16px) !important;
-  }
-
-  .pkg-btn {
-    padding: 5px 10px !important;
-    font-size: 9px !important;
-  }
-}
 
 /* ===== GALLERY — 2 cols on mobile ===== */
 @media (max-width: 900px) {
@@ -6387,3 +6225,73 @@ textarea {
     font-size: clamp(32px, 11vw, 52px) !important;
   }
 }
+
+/* ============================================
+   FORCE DESKTOP VIEW FOR TOUR PACKAGES
+   Applies to all mobile and tablet sizes
+   ============================================ */
+@media (max-width: 1024px) {
+  .packages-grid {
+    display: grid !important;
+    grid-template-columns: repeat(15, 1fr) !important;
+    gap: 10px !important;
+    padding: 0 !important;
+  }
+
+  .pkg-card {
+    grid-column: span 5 !important;
+    grid-row: span 1 !important;
+    aspect-ratio: 4/3 !important;
+    height: auto !important;
+    display: block !important;
+  }
+
+  .pkg-card.pkg-large {
+    grid-column: span 10 !important;
+    grid-row: span 2 !important;
+    aspect-ratio: auto !important;
+    height: 100% !important;
+  }
+
+  .pkg-card.pkg-medium {
+    grid-column: span 5 !important;
+    aspect-ratio: 16/10 !important;
+  }
+
+  .pkg-card:nth-child(4) {
+    grid-column: span 8 !important;
+    aspect-ratio: 8 / 4 !important;
+  }
+
+  .pkg-card:nth-child(5) {
+    grid-column: span 7 !important;
+    aspect-ratio: 7 / 4 !important;
+  }
+
+  .pkg-overlay {
+    padding: 10px !important;
+    gap: 5px !important;
+  }
+
+  .pkg-overlay h3 {
+    font-size: clamp(10px, 2.5vw, 20px) !important;
+    margin-bottom: 2px !important;
+    line-height: 1.1 !important;
+    width: 100% !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .pkg-btn {
+    padding: 4px 10px !important;
+    font-size: 8px !important;
+    display: inline-block !important;
+    border-radius: 4px !important;
+  }
+
+  .pkg-card.coming-soon .pkg-overlay::after {
+    padding: 6px 15px !important;
+    font-size: 10px !important;
+    letter-spacing: 1px !important;
+  }
+}
+
