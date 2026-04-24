@@ -11,7 +11,7 @@ function injectFloatingButtons() {
         <i class="fab fa-instagram"></i>
         <span class="floating-btn-label">Follow Us</span>
       </a>
-      <a href="https://wa.me/919976692604" class="floating-contact-btn whatsapp" target="_blank" aria-label="Chat with us on WhatsApp">
+      <a href="https://wa.me/919500123844" class="floating-contact-btn whatsapp" target="_blank" aria-label="Chat with us on WhatsApp">
         <i class="fab fa-whatsapp"></i>
         <span class="floating-btn-label">Chat with Us</span>
       </a>
@@ -628,7 +628,71 @@ setTimeout(injectEntrancePopup, 5000);
     });
   });
 
-  // ===== 11. GALLERY FILTER =====
+  // ===== GALLERY SLIDER LOGIC =====
+  const gallerySlider = document.getElementById('gallerySlider');
+  const galleryNext = document.getElementById('galleryNext');
+  const galleryPrev = document.getElementById('galleryPrev');
+  const galleryProgress = document.getElementById('galleryProgress');
+
+  if (gallerySlider) {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    // Check Button Visibility
+    const checkButtons = () => {
+      galleryPrev.style.display = gallerySlider.scrollLeft <= 5 ? 'none' : 'flex';
+      galleryNext.style.display = (gallerySlider.scrollLeft + gallerySlider.clientWidth >= gallerySlider.scrollWidth - 5) ? 'none' : 'flex';
+    };
+
+    // Scroll Progress & Button Check
+    const updateProgress = () => {
+      const scrollPercentage = (gallerySlider.scrollLeft / (gallerySlider.scrollWidth - gallerySlider.clientWidth)) * 100;
+      if (galleryProgress) galleryProgress.style.width = (scrollPercentage || 0) + '%';
+      checkButtons();
+    };
+
+    gallerySlider.addEventListener('scroll', updateProgress);
+    window.addEventListener('resize', updateProgress);
+    setTimeout(updateProgress, 500); // Initial check
+
+    // Nav Buttons
+    if (galleryNext) {
+      galleryNext.addEventListener('click', () => {
+        gallerySlider.scrollBy({ left: 380, behavior: 'smooth' });
+      });
+    }
+    if (galleryPrev) {
+      galleryPrev.addEventListener('click', () => {
+        gallerySlider.scrollBy({ left: -380, behavior: 'smooth' });
+      });
+    }
+
+    // Mouse Drag
+    gallerySlider.addEventListener('mousedown', (e) => {
+      isDown = true;
+      gallerySlider.classList.add('active');
+      startX = e.pageX - gallerySlider.offsetLeft;
+      scrollLeft = gallerySlider.scrollLeft;
+    });
+    gallerySlider.addEventListener('mouseleave', () => {
+      isDown = false;
+      gallerySlider.classList.remove('active');
+    });
+    gallerySlider.addEventListener('mouseup', () => {
+      isDown = false;
+      gallerySlider.classList.remove('active');
+    });
+    gallerySlider.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - gallerySlider.offsetLeft;
+      const walk = (x - startX) * 2;
+      gallerySlider.scrollLeft = scrollLeft - walk;
+    });
+  }
+
+  // ===== 11. GALLERY FILTER (Enhanced for Slider) =====
   const filterBtns = document.querySelectorAll('.filter-btn');
   const galleryItems = document.querySelectorAll('.gallery-item');
 
@@ -658,6 +722,12 @@ setTimeout(injectEntrancePopup, 5000);
           }, 300);
         }
       });
+
+      // Update slider state after filtering
+      setTimeout(() => {
+        if (typeof updateProgress === 'function') updateProgress();
+        if (gallerySlider) gallerySlider.scrollTo({ left: 0, behavior: 'smooth' });
+      }, 350);
     });
   });
 
@@ -755,7 +825,7 @@ setTimeout(injectEntrancePopup, 5000);
               duration: '4 Days / 3 Nights',
               price: '₹12,499',
               isTrending: true,
-              image: 'https://images.unsplash.com/photo-1590050752117-23a9d7fc91bc?w=500',
+              image: 'https://res.cloudinary.com/drkgkgiat/image/upload/v1776755874/ChatGPT_Image_Apr_21_2026_12_47_19_PM_aawmvu.png',
               itinerary: [
                 { day: 'Day 1', activity: 'Arrival in Ooty, transfer to hotel. Evening boat ride at Ooty Lake.' },
                 { day: 'Day 2', activity: 'Full day sightseeing: Botanical Garden, Rose Garden, and Doddabetta Peak.' },
@@ -768,7 +838,7 @@ setTimeout(injectEntrancePopup, 5000);
               title: 'Kodaikanal Dreams',
               duration: '4 Days / 3 Nights',
               price: '₹11,999',
-              image: 'https://images.unsplash.com/photo-1626243810143-dd0e152011b4?w=500',
+              image: 'https://res.cloudinary.com/drkgkgiat/image/upload/v1770711122/sample.jpg',
               itinerary: [
                 { day: 'Day 1', activity: 'Arrival in Kodaikanal, Leisure walk by Kodai Lake.' },
                 { day: 'Day 2', activity: 'Coakers Walk, Bryant Park, and Silver Cascade Falls.' },
@@ -794,7 +864,7 @@ setTimeout(injectEntrancePopup, 5000);
               title: 'Dhanushkodi Heritage',
               duration: '4 Days / 3 Nights',
               price: '₹14,200',
-              image: 'https://images.unsplash.com/photo-1544218683-1188319f303d?w=500',
+              image: 'https://www.solitarytraveller.com/wp-content/uploads/2021/08/10_abandoned_places_of_india_Dhanushkodi.jpg',
               itinerary: [
                 { day: 'Day 1', activity: 'Arrival in Rameshwaram. Visit Ramanathaswamy Temple.' },
                 { day: 'Day 2', activity: 'Trip to Dhanushkodi Ghost Town and Arichal Munai (Ram Setu point).' },
@@ -1773,7 +1843,7 @@ setTimeout(injectEntrancePopup, 5000);
         <i class="fab fa-instagram"></i>
         <span class="floating-btn-label">Follow Us</span>
       </a>
-      <a href="https://wa.me/919976692604" class="floating-contact-btn whatsapp" target="_blank" aria-label="Chat with us on WhatsApp">
+      <a href="https://wa.me/919500123844" class="floating-contact-btn whatsapp" target="_blank" aria-label="Chat with us on WhatsApp">
         <i class="fab fa-whatsapp"></i>
         <span class="floating-btn-label">Chat with Us</span>
       </a>
