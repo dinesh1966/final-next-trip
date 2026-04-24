@@ -360,6 +360,73 @@
             color: #fadb14;
             margin-bottom: 8px;
         }
+
+        /* Responsive Admin Dashboard */
+        @media (max-width: 768px) {
+            .admin-nav {
+                padding: 12px 0;
+            }
+            .admin-nav .container {
+                flex-direction: column;
+                gap: 12px;
+                padding: 0 16px;
+            }
+            .admin-nav .logo img {
+                height: 38px;
+            }
+            .back-link {
+                font-size: 13px;
+            }
+            .admin-tabs {
+                gap: 5px;
+                margin-top: 10px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            .tab-link {
+                padding: 10px 14px;
+                font-size: 13px;
+                white-space: nowrap;
+            }
+            .section-header {
+                margin: 25px 0 20px;
+                text-align: center;
+            }
+            .section-header h2 {
+                font-size: 22px;
+            }
+            .section-header p {
+                font-size: 13px;
+            }
+            .booking-card, .review-card, .inquiry-card {
+                padding: 15px;
+            }
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .card-title {
+                font-size: 16px;
+            }
+            .card-meta {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            .card-meta span {
+                font-size: 12px;
+            }
+            .card-body {
+                font-size: 14px;
+            }
+            .card-body div {
+                padding: 10px !important;
+                font-size: 13px !important;
+            }
+        }
     </style>
 </head>
 
