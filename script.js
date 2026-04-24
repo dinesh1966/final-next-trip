@@ -7,7 +7,7 @@ function injectFloatingButtons() {
   if (document.querySelector('.floating-contact-wrap')) return;
   const buttonsHtml = `
     <div class="floating-contact-wrap">
-      <a href="https://instagram.com/nexttrip_holidays" class="floating-contact-btn instagram" target="_blank" aria-label="Follow us on Instagram">
+      <a href="https://instagram.com/nextrip_holidays_" class="floating-contact-btn instagram" target="_blank" aria-label="Follow us on Instagram">
         <i class="fab fa-instagram"></i>
         <span class="floating-btn-label">Follow Us</span>
       </a>
@@ -1839,7 +1839,7 @@ setTimeout(injectEntrancePopup, 5000);
 
     const buttonsHtml = `
     <div class="floating-contact-wrap">
-      <a href="https://instagram.com/nexttrip_holidays" class="floating-contact-btn instagram" target="_blank" aria-label="Follow us on Instagram">
+      <a href="https://instagram.com/nextrip_holidays_" class="floating-contact-btn instagram" target="_blank" aria-label="Follow us on Instagram">
         <i class="fab fa-instagram"></i>
         <span class="floating-btn-label">Follow Us</span>
       </a>
